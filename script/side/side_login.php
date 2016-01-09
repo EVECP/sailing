@@ -16,7 +16,7 @@
 		mysqli_stmt_execute($stmt_login);
 		mysqli_stmt_bind_result($stmt_login, $id);
 		$user_id = 0;
-		if (mysqli_stmt_fetch($stmt_login)) {
+		if (mysqli_stmt_fetch($stmt_login)){
 			$user_id = $id;
 		}
 		mysqli_stmt_close($stmt_login);
