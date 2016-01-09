@@ -1,0 +1,164 @@
+#content {
+	padding: 7px;
+	overflow: hidden;
+}
+#c-content { overflow: hidden; }
+#sidebar {
+	margin-left: 7px;
+	margin-bottom: 20px;
+	width: 300px;
+	float: right;
+}
+#sidebar .spacer { position: relative; }
+#search {
+	padding: 6px 25px 6px 9px;
+	width: 300px;
+}
+.btn.search {
+	position: absolute;
+	right: 6px;
+	top: 6px;
+	cursor: pointer;
+}
+#sidebar .spacer {
+	margin: 7px 0px 12px;
+}
+#login-area input[type="text"], #login-area input[type="password"] {
+	margin: 5px 0px 0px 5px;
+	padding: 6px;
+	width: 141px;
+	font-size: 11px;
+	display: inline-block;
+}
+#login-area {
+	font-size: 0;
+	border: 1px solid #323232;
+	background-color: transparent;
+	overflow: hidden;
+}
+#remember-me {
+	margin: 4px;
+	margin-left: 5px;
+	line-height: 24px;
+	float: left;
+}
+#rem-login-main {
+	margin: 0;
+	margin-right: 5px;
+}
+#rem-prompt {
+	padding: 2px 0 2px 0;
+	margin-right: 5px;
+	white-space: nowrap;
+	color: #CCCED4;
+}
+#recover-password {
+	margin-left: 1em;
+	color: #fff;
+	cursor: pointer;
+	text-decoration: none;
+}
+#rem-login-main, #rem-prompt, #recover-password {
+	font-size: 11px;
+	display: inline-block;
+	vertical-align: middle;
+}
+#login-subbutton {
+	margin: 4px;
+	margin-right: 5px;
+	float: right;
+}
+#submit-user.btn { font-weight: bold; }
+.btn.large-btn {
+	margin: 0 auto;
+	width: 289px;
+	font-weight: bold;
+	text-align: center;
+	display: block;
+}
+
+#subjects {
+	margin-top: 7px;
+}
+#subjects .spacer {
+	padding: 7px 21px 3px 0;
+	overflow: hidden;
+	clear: left;
+	background-color: #323232;
+	position: relative;
+}
+div.background-img {
+	width: 100%;
+	height: 3px;
+	display: inline-block;
+	position: absolute;
+}
+div.background-img.top {
+	background-image: url("../img/subject/top-td-row2-bg.gif");
+	background-repeat: repeat-x;
+	top: 0;
+	left: 0;
+}
+div.background-img.bot {
+	background-image: url("../img/subject/bot-td-row2-bg.gif");
+	background-repeat: repeat-x;
+	bottom: 0;
+	left: 0;
+}
+span.num {
+	margin-top: 15px;
+	width: 30px;
+	font-size: 15px;
+	text-align: right;
+	float: left;
+}
+div.unvoted {
+	margin: 0 7px;
+	padding: 1px 0 9px;
+	width: 36px;
+	font-size: 0;
+	text-align: center;
+	float: left;
+}
+.unvoted div.arrow {
+	width: 15px;
+	height: 15px;
+	display: inline-block;
+	cursor: pointer;
+}
+.unvoted div.score {
+	font-size: 13px;
+	font-weight: bold;
+	display: none;
+}
+div.score.active { display: block; }
+div.entry { overflow: hidden; }
+.thumbnail.may-blank {
+	margin-right: 3px;
+	float: left;
+	overflow: hidden;	
+}
+.thumbnail img {
+	width: 70px;
+	height: 70px;
+	display: inline-block;
+}
+a.title {
+	font-size: 16px;
+	color: #f0f0f0;
+}
+a.title:visited { color: #888; }
+.tagline {
+	margin-top: 5px;
+	font-size: 11px;
+	color: #CCCED4;
+	letter-spacing: 1px;	
+}
+.tagline .author { color: #64e6e6; }
+.tagline .subsailing { color: #64e6e6; }
+.subtagline.btn { margin-top: 3px; }
+.btn .comments {
+	color: #46a0a0;
+	font-weight: bold;
+	letter-spacing: 2px;
+}
