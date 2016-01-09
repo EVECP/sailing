@@ -1,5 +1,5 @@
 <?php
-	$db_link;exit;//...
+	$db_link;
 	
 	function get_connection(){
 		$db_link = mysqli_connect('localhost', 'root', '', 'sailing');

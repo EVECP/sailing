@@ -1,3 +1,3 @@
 <?php
-	define('HOST', 'http://localhost/sailing');
+	define('HOST', 'http://localhost/github/sailing');
 ?>
