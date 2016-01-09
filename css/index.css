@@ -1,0 +1,81 @@
+#content {
+	padding: 7px;
+	overflow: hidden;
+}
+#c-content { overflow: hidden; }
+#subjects { margin-top: 7px; }
+#subjects .spacer {
+	padding: 7px 21px 3px 0;
+	overflow: hidden;
+}
+span.num {
+	margin-top: 15px;
+	width: 30px;
+	font-size: 15px;
+	text-align: right;
+	float: left;
+}
+div.unvoted {
+	margin: 0 7px;
+	padding: 1px 0 9px;
+	width: 36px;
+	font-size: 0;
+	text-align: center;
+	float: left;
+}
+.unvoted div.arrow {
+	width: 15px;
+	height: 15px;
+	display: inline-block;
+	cursor: pointer;
+}
+div.arrow.up { background: url("../img/www.sailing-no-plan.com.png") no-repeat -21px -865px; }
+div.arrow.down { background: url("../img/www.sailing-no-plan.com.png") no-repeat -86px -842px; }
+div.arrow.up.upvoted { background: url("../img/www.sailing-no-plan.com.png") no-repeat -42px -865px }
+div.arrow.down.downvoted { background: url("../img/www.sailing-no-plan.com.png") no-repeat 0 -864px; }
+.unvoted div.score {
+	font-size: 13px;
+	font-weight: bold;
+	display: none;
+}
+div.score.active { display: block; }
+div.entry { overflow: hidden; }
+a.title {
+	font-size: 16px;
+	color: #00f;
+}
+a.title:visited { color: #551a8b; }
+.domain a { color: #888; }
+.tagline {
+	margin-top: 5px;
+	font-size: 11px;
+	color: #888;
+	letter-spacing: 1px;
+}
+.tagline .author, .subto { color: #369; }
+.subtagline { margin-top: 3px; }
+.comments {
+	color: #888;
+	font-size: 11px;
+	font-weight: bold;
+	letter-spacing: 2px;
+}
+.nav-btns {
+	margin-top: 10px;
+	font-size: 13px;
+	line-height: 20px;
+	color: #666;
+}
+.next-page a {
+	padding: 1px 4px;
+	font-size: 13px;
+	font-weight: bold;
+	color: #369;
+	background-color: #eee;
+	border: 1px solid #888;
+	border-radius: 3px;
+}
+.division {
+	margin: 1px 4px;
+	border-left: 1px solid #ccced4;
+}

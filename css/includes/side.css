@@ -1,0 +1,70 @@
+#side {
+	margin-left: 7px;
+	margin-bottom: 20px;
+	width: 300px;
+	float: right;
+}
+#side .spacer {
+	margin: 7px 0 12px;
+	position: relative;
+}
+#search {
+	padding: 6px 25px 6px 9px;
+	width: 300px;
+}
+#side-sign-in {
+	border: 1px solid #323232;
+	background-color: transparent;
+	overflow: hidden;
+}
+#side-sign-in input[type="text"], #side-sign-in input[type="password"] {
+	margin: 5px 0 0 5px;
+	padding: 6px;
+	width: 141px;
+	display: inline-block;
+}
+#remember-and-recover {
+	margin: 12px 4px 4px;
+	margin-left: 5px;
+	font-size: 13px;
+	float: left;
+}
+#remember-and-recover input[type="checkbox"] {
+	margin-top: 2px;
+	margin-right: 2px;
+	display: inline-block;
+	vertical-align: top;
+}
+#remember-and-recover label {
+	margin-right: 5px;
+	color: #323232;
+}
+#remember-and-recover #recover {
+	color: #369;
+}
+#side-sign-in input[type="submit"] {
+	margin: 5px 5px 7px 0;
+	padding: 2px 6px 3px;
+	color: #323232;
+	float: right;
+}
+.new-btn {
+	margin: 0 auto;
+	padding: 2px 6px 3px;
+	width: 289px;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 17px;
+	color: #fff;
+	text-align: center;
+	background-color: #666;
+	border: 1px solid #666;
+	-moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	display: block;
+	cursor: pointer;
+}

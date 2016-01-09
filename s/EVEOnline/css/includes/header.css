@@ -1,0 +1,102 @@
+#c-header {
+	padding-bottom: 7px;
+	height: 100px;
+	position: relative;
+}
+#c-header-copy {
+	width: 100%;
+	height: 168px;
+	background-image: url(../../img/header/map-fallback.jpg);
+	background-position: bottom center;	
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -99;
+}
+#title {
+	width: 210px;
+	height: 93px;
+	text-align: center;
+	display: inline-block;
+	position: absolute;
+	bottom: 0;
+}
+#title span {
+	width: 210px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 21px;
+	color: #fff;
+	letter-spacing: 5px;
+	display: inline-block;
+}
+#title #of { color: #fff; }
+#title img {
+	margin-top: -17px;
+	margin-left: 7px;
+	display: inline-block;
+}
+#menu-copy {
+	background-color: #CCCED4;
+	filter:alpha(opacity=10);
+	-moz-opacity:.1;
+	-khtml-opacity: .1;
+	opacity: .1;
+}
+#menu, #menu-copy {
+	position: absolute;
+	bottom: 21px;
+	left: 300px;
+}
+#menu ul li, #menu-copy ul li {
+	text-decoration: none;
+	display: inline-block;
+	vertical-align: top;
+	margin: 5px 7px;
+}
+#menu ul li a, #menu-copy ul li a {
+	font-weight: bold;
+}
+a.high-lighter { color: #fff; }
+#headersign-copy, #headersign, #headersignedin-copy, #headersignedin {
+	padding: 2px;
+	padding-left: 5px;
+	-moz-border-top-left-radius: 5px;
+    -webkit-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+	display: inline-block;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+#headersignedin-copy, #headersignedin {
+	font-size: 11px;
+	letter-spacing: 1px;
+}
+#headersign-copy, #headersignedin-copy {
+	background-color: #CCCED4;
+	filter:alpha(opacity=10);
+	-moz-opacity:.1;
+	-khtml-opacity: .1;
+	opacity: .1;
+}
+#headersign-copy span, #headersign span, #headersignedin-copy span, #headersignedin span {
+	font-size: 11px;
+	line-height: 11px;
+	color: #CCCED4;
+}
+form#logout { display: inline-block; }
+a.btn.signin {
+	color: #fff;
+}
+#marquee-bar {
+	width: 100%;
+}
+.border-bot.op {
+	height: 3px;
+	background-color: #CCCED4;
+	filter:alpha(opacity=10);
+	-moz-opacity:.1;
+	-khtml-opacity: .1;
+	opacity: .1;
+}

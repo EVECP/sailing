@@ -1,0 +1,14 @@
+.m { cursor: pointer; }
+.m-0 {
+	color: #CCCED4;
+	margin-left: 7px;
+	margin-right: 2px;
+}
+.m-0, .m-2 {
+	font-size: 11px;
+}
+.m-1, .m-2 {
+	color: #FF5555;/*red: #FF5555; green: #00CC00*/
+}
+.rise {}
+.set {}
