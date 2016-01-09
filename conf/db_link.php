@@ -1,5 +1,6 @@
 <?php
-	$db_link;exit;
+	$db_link;exit;//...
+	
 	function get_connection(){
 		$db_link = mysqli_connect('localhost', 'root', '', 'sailing');
 		if (mysqli_error($db_link)){
