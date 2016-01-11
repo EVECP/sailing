@@ -1,6 +1,6 @@
 <?php
-	require_once('../conf/constant.php');
-	require_once('../conf/db_link.php');
+	require_once('../../../conf/constant.php');
+	require_once('../../../conf/db_link.php');
 	if (!isset($_SESSION)){
 		session_start();
 	}
@@ -225,20 +225,20 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 		<meta charset="UTF-8">
-		<link rel="stylesheet" href="../css/includes/global.css">
-		<link rel="stylesheet" href="../css/includes/header.css">
-		<link rel="stylesheet" href="../css/includes/side.css">
-		<link rel="stylesheet" href="../css/index.css">
+		<link rel="stylesheet" href="../../../css/includes/global.css">
+		<link rel="stylesheet" href="../../../css/includes/header.css">
+		<link rel="stylesheet" href="../../../css/includes/side.css">
+		<link rel="stylesheet" href="../../../css/index.css">
 	</head>
 	<body>
 		<div id="header">
 			<div id="header-top-area">
 				<div>
-					<a class="header-top-area-active" href="../">首页</a>
+					<a href="../../../">首页</a>
 					<span>-</span>
-					<a href="../s/all/">所有</a>
+					<a class="header-top-area-active" href="../">所有</a>
 					<span>-</span>
-					<a href="../s/random/">随机</a>
+					<a href="../../random/">随机</a>
 				</div>
 				<span>|</span>
 				<div>
@@ -250,7 +250,7 @@
 					<?php
 							}
 					?>
-					<a href="../s/<?=$p['name']?>/"><?=$p['display_name']?></a>
+					<a href="../../<?=$p['name']?>/"><?=$p['display_name']?></a>
 					<?php
 						}
 					?>
@@ -260,7 +260,10 @@
 				<div id="title">
 					<a id="site-title" href="<?=HOST?>">
 						Sailing<!--img-->
-					</a>
+					</a><span
+					id="panel-name">
+						<a href="<?=HOST?>/s/all">所有</a>
+					</span>
 				</div>
 				<div id="menu">
 					<ul>
@@ -434,8 +437,8 @@
 				?>
 			</div>
 		</div>
-		<script src="../js/xmlhttp.js"></script>
-		<script src="../js/sideLogin.js"></script>
-		<script src="../js/sailing.js"></script>
+		<script src="../../../js/xmlhttp.js"></script>
+		<script src="../../../js/sideLogin.js"></script>
+		<script src="../../../js/sailing.js"></script>
 	</body>
 </html>

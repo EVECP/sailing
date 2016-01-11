@@ -1,6 +1,6 @@
 <?php
-	require_once('../conf/constant.php');
-	require_once('../conf/db_link.php');
+	require_once('../../conf/constant.php');
+	require_once('../../conf/db_link.php');
 	if (!isset($_SESSION)){
 		session_start();
 	}
@@ -97,7 +97,7 @@
 		echo -1;
 		exit;
 	}
-	$sql = 'select subject_id from subject_score order by subject_id desc limit ' . ($count * ($page - 1)) . ',' . $count;
+	$sql = 'select subject_id from subject_score order by score desc,subject_id desc limit ' . ($count * ($page - 1)) . ',' . $count;
 	$subject_ids_arr = array();
 	if ($res = mysqli_query($db_link, $sql)){
 		while ($datarow = mysqli_fetch_array($res)){
@@ -225,20 +225,20 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 		<meta charset="UTF-8">
-		<link rel="stylesheet" href="../css/includes/global.css">
-		<link rel="stylesheet" href="../css/includes/header.css">
-		<link rel="stylesheet" href="../css/includes/side.css">
-		<link rel="stylesheet" href="../css/index.css">
+		<link rel="stylesheet" href="../../css/includes/global.css">
+		<link rel="stylesheet" href="../../css/includes/header.css">
+		<link rel="stylesheet" href="../../css/includes/side.css">
+		<link rel="stylesheet" href="../../css/index.css">
 	</head>
 	<body>
 		<div id="header">
 			<div id="header-top-area">
 				<div>
-					<a class="header-top-area-active" href="../">首页</a>
+					<a href="../../">首页</a>
 					<span>-</span>
-					<a href="../s/all/">所有</a>
+					<a class="header-top-area-active" href="./">所有</a>
 					<span>-</span>
-					<a href="../s/random/">随机</a>
+					<a href="../random/">随机</a>
 				</div>
 				<span>|</span>
 				<div>
@@ -250,7 +250,7 @@
 					<?php
 							}
 					?>
-					<a href="../s/<?=$p['name']?>/"><?=$p['display_name']?></a>
+					<a href="../<?=$p['name']?>/"><?=$p['display_name']?></a>
 					<?php
 						}
 					?>
@@ -258,19 +258,22 @@
 			</div>
 			<div id="c-header">
 				<div id="title">
-					<a id="site-title" href="<?=HOST?>">
+					<a id="site-title" href="./">
 						Sailing<!--img-->
-					</a>
+					</a><span
+					id="panel-name">
+						<a href="<?=HOST?>/s/all">所有</a>
+					</span>
 				</div>
 				<div id="menu">
 					<ul>
-						<li><a href="../">热门</a></li>
-						<li class="menu-active"><a href="./">最新</a></li>
-						<li><a href="../rising/">好评上升中</a></li>
-						<li><a href="../controversial/">具争议的</a></li>
-						<li><a href="../top/">头等</a></li>
-						<li><a href="../gilded/">精选</a></li>
-						<li><a href="../wiki/index/">wiki</a></li>
+						<li class="menu-active"><a href="./">热门</a></li>
+						<li><a href="new/">最新</a></li>
+						<li><a href="rising/">好评上升中</a></li>
+						<li><a href="controversial/">具争议的</a></li>
+						<li><a href="top/">头等</a></li>
+						<li><a href="gilded/">精选</a></li>
+						<li><a href="wiki/index/">wiki</a></li>
 					</ul>
 				</div>
 				<?php
@@ -319,10 +322,10 @@
 						}
 					?>
 					<div class="spacer">
-						<a class="new-btn" id="new-link" href="../submit/?type=link">发表新链接</a>
+						<a class="new-btn" id="new-link" href="../../submit/?type=link">发表新链接</a>
 					</div>
 					<div class="spacer">
-						<a class="new-btn" id="new-sub" href="../submit/">发表新文章</a>
+						<a class="new-btn" id="new-sub" href="../../submit/">发表新文章</a>
 					</div>
 					<div class="spacer">
 						<a class="new-btn" id="new-panel">建立新看板</a>
@@ -419,6 +422,38 @@
 					<?php
 						}
 					?>
+					<!--
+					<div class="spacer">
+						<span class="num">2</span>
+						<div class="unvoted">
+							<div class="arrow up" id="upvote"></div>
+							<div class="score" id="dislikes">21</div>
+							<div class="score active" id="unvoted">22</div>
+							<div class="score" id="likes">23</div>
+							<div class="arrow down" id="downvote"></div>
+						</div>
+						<div class="entry">
+							<p class="c-title">
+								<a class="title" href="comments?subject=<??>">
+								One of the best series of random events ever caught on film.
+								TIL that a father was denied access to see his premature twins in the NICU when Beyonce and Jay-Z had their daughter at the same time.
+								</a>
+								<span class="domain">
+									<a>(sailing.com)</a>
+								</span>
+							</p>
+							<p class="tagline">
+								<time>2小时</time>
+								前被
+								<a class="author">liyz</a>
+								提交到
+								<a class="subto">/s/music</a>
+							</p>
+							<p class="subtagline">
+								<a class="comments">221留言</a>
+							</p>
+						</div>
+					</div>-->
 				</div>
 				<?php
 					if ($has_next_page){
@@ -434,8 +469,8 @@
 				?>
 			</div>
 		</div>
-		<script src="../js/xmlhttp.js"></script>
-		<script src="../js/sideLogin.js"></script>
-		<script src="../js/sailing.js"></script>
+		<script src="../../js/xmlhttp.js"></script>
+		<script src="../../js/sideLogin.js"></script>
+		<script src="../../js/sailing.js"></script>
 	</body>
 </html>

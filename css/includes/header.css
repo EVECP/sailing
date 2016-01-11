@@ -1,3 +1,21 @@
+#header-top-area {
+	height: 18px;
+	line-height: 18px;
+	font-size: 9px;
+	color: #323232;
+	background-color: #f0f0f0;
+	border-bottom: 1px solid #808080;
+}
+#header-top-area div {
+	display: inline-block;
+}
+#header-top-area a { color: #323232; }
+#header-top-area a:hover { text-decoration: underline; }
+#header-top-area .header-top-area-active {
+	font-weight: bold;
+	color: #ff4500;
+}
+#header-top-area .top-area-panel-selected { color: #ff4500 }
 #c-header {
 	background-color: #323232;
 	border-bottom: 1px solid #666;
@@ -5,9 +23,9 @@
 }
 #title { display: inline-block; }
 #site-title {
-	margin-top: 4px;
-	margin-right: 12px;
+	margin: 2px 5px 3px 0;
 	font-size: 36px;
+	display: inline-block;
 }
 #panel-name a {
 	margin-right: 9px;
@@ -53,7 +71,7 @@
 #header-sign-in, #header-signed-in {
 	padding: 2px;
 	padding-left: 5px;
-	font-size: 11px;
+	font-size: 10px;
     border-top-left-radius: 5px;
 	background-color: #666;
 	display: inline-block;

@@ -69,10 +69,7 @@ a.high-lighter { color: #fff; }
 	bottom: 0;
 	right: 0;
 }
-#headersignedin-copy, #headersignedin {
-	font-size: 11px;
-	letter-spacing: 1px;
-}
+#headersignedin-copy, #headersignedin { letter-spacing: 1px; }
 #headersign-copy, #headersignedin-copy {
 	background-color: #CCCED4;
 	filter:alpha(opacity=10);
@@ -81,8 +78,8 @@ a.high-lighter { color: #fff; }
 	opacity: .1;
 }
 #headersign-copy span, #headersign span, #headersignedin-copy span, #headersignedin span {
-	font-size: 11px;
-	line-height: 11px;
+	font-size: 10px;
+	line-height: 10px;
 	color: #CCCED4;
 }
 form#logout { display: inline-block; }

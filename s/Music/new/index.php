@@ -7,6 +7,59 @@
 	}
 	
 	/**
+	 *select panel id order by subjects counts
+	 */
+	if (!$db_link_panel_id = get_connection()){
+		//some code...
+		exit;
+	}
+	$sql_panel_id = 'select count(panel_id), panel_id from subject group by panel_id';
+	$panels_arr = array();
+	if ($res_panel_id = mysqli_query($db_link_panel_id, $sql_panel_id)){
+		while ($datarow_panel_id = mysqli_fetch_array($res_panel_id)){
+			$panel_id_arr = array();
+			$panel_id_arr['count'] = $datarow_panel_id[0];
+			$panel_id_arr['panel_id'] = $datarow_panel_id[1];
+			$panels_arr[] = $panel_id_arr;
+		}
+		mysqli_free_result($res_panel_id);
+		mysqli_close($db_link_panel_id);
+	}else{
+		mysqli_close($db_link_panel_id);
+		echo -2;
+		//some code...
+		exit;
+	}
+	function cmp($a, $b){
+		if ($a['count'] == $b['count']){
+			return 0;
+		}
+		return $a['count'] > $b['count'] ? -1 : 1;
+	}
+	usort($panels_arr, 'cmp');
+	foreach ($panels_arr as $k=>$p){
+		if (!$db_link_panel_name = get_connection()){
+			echo -1;
+			//some code...
+			exit;
+		}
+		$sql_panel_name = 'select name, display_name from panel where id=' . $p['panel_id'];
+		if ($res_panel_name = mysqli_query($db_link_panel_name, $sql_panel_name)){
+			if ($datarow_panel_name = mysqli_fetch_array($res_panel_name)){
+				$panels_arr[$k]['name'] = $datarow_panel_name['name'];
+				$panels_arr[$k]['display_name'] = $datarow_panel_name['display_name'];
+			}
+			mysqli_free_result($res_panel_name);
+			mysqli_close($db_link_panel_name);
+		}else{
+			mysqli_close($db_link_panel_name);
+			echo -2;
+			//some code...
+			exit;
+		}
+	}
+	
+	/**
 	 *count of all subjects
 	 */
 	if (!$db_link_count = get_connection()){
@@ -178,6 +231,36 @@
 	</head>
 	<body>
 		<div id="header">
+			<div id="header-top-area">
+				<div>
+					<a href="../../../">首页</a>
+					<span>-</span>
+					<a href="../../all/">所有</a>
+					<span>-</span>
+					<a href="../../random/">随机</a>
+				</div>
+				<span>|</span>
+				<div>
+					<?php
+						foreach ($panels_arr as $k=>$p){
+							if ($k > 0){
+					?>
+					<span>-</span>
+					<?php
+							}
+							if ($p['name'] == PANEL_NAME){
+					?>
+					<a class="top-area-panel-selected" href="../../<?=$p['name']?>/"><?=$p['display_name']?></a>
+					<?php
+							}else{
+					?>
+					<a href="../../<?=$p['name']?>/"><?=$p['display_name']?></a>
+					<?php
+							}
+						}
+					?>
+				</div>
+			</div>
 			<div id="c-header">
 				<div id="title">
 					<a id="site-title" href="<?=HOST?>">
@@ -345,6 +428,9 @@
 						}
 					?>
 				</div>
+				<?php
+					if ($has_next_page || $page > 1){
+				?>
 				<div class="nav-btns">
 					<div class="next-page">
 						<span>继续阅读：</span>
@@ -367,6 +453,9 @@
 						?>
 					</div>
 				</div>
+				<?php
+					}
+				?>
 			</div>
 		</div>
 		<script src="../../../s_includes/js/xmlhttp.js"></script>
