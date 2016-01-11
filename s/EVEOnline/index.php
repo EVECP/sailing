@@ -5,12 +5,118 @@
 	if (!isset($_SESSION)){
 		session_start();
 	}
-	if (!$db_link = get_connection()){
+	if (isset($_SESSION['user'])){
+		if (!$db_link_user = get_connection()){
+			//some code...
+			exit;
+		}
+		$sql_user = 'select username from user where id=' . $_SESSION['user'];
+		$username = '';
+		if ($res_user = mysqli_query($db_link_user, $sql_user)){
+			if ($datarow_user = mysqli_fetch_array($res_user)){
+				$username = $datarow_user['username'];
+			}
+			mysqli_free_result($res_user);
+			mysqli_close($db_link_user);
+		}else{
+			//some code...
+			mysqli_close($db_link_user);
+			exit;
+		}
+	}
+	
+	/**
+	 *select panel id order by subjects counts
+	 */
+	if (!$db_link_panel_id = get_connection()){
 		//some code...
-		echo -1;
 		exit;
 	}
-	$sql = 'select subject_id from subject_score where panel_id=' . PANEL . ' order by score,subject_id desc limit 0,25';
+	$sql_panel_id = 'select count(panel_id), panel_id from subject group by panel_id';
+	$panels_arr = array();
+	if ($res_panel_id = mysqli_query($db_link_panel_id, $sql_panel_id)){
+		while ($datarow_panel_id = mysqli_fetch_array($res_panel_id)){
+			$panel_id_arr = array();
+			$panel_id_arr['count'] = $datarow_panel_id[0];
+			$panel_id_arr['panel_id'] = $datarow_panel_id[1];
+			$panels_arr[] = $panel_id_arr;
+		}
+		mysqli_free_result($res_panel_id);
+		mysqli_close($db_link_panel_id);
+	}else{
+		mysqli_close($db_link_panel_id);
+		echo -2;
+		//some code...
+		exit;
+	}
+	function cmp($a, $b){
+		if ($a['count'] == $b['count']){
+			return 0;
+		}
+		return $a['count'] > $b['count'] ? -1 : 1;
+	}
+	usort($panels_arr, 'cmp');
+	foreach ($panels_arr as $k=>$p){
+		if (!$db_link_panel_name = get_connection()){
+			echo -1;
+			//some code...
+			exit;
+		}
+		$sql_panel_name = 'select name, display_name from panel where id=' . $p['panel_id'];
+		if ($res_panel_name = mysqli_query($db_link_panel_name, $sql_panel_name)){
+			if ($datarow_panel_name = mysqli_fetch_array($res_panel_name)){
+				$panels_arr[$k]['name'] = $datarow_panel_name['name'];
+				$panels_arr[$k]['display_name'] = $datarow_panel_name['display_name'];
+			}
+			mysqli_free_result($res_panel_name);
+			mysqli_close($db_link_panel_name);
+		}else{
+			mysqli_close($db_link_panel_name);
+			echo -2;
+			//some code...
+			exit;
+		}
+	}
+	
+	/**
+	 *count of all subjects
+	 */
+	if (!$db_link_count = get_connection()){
+		//some code...
+		exit;
+	}
+	$sql_count = 'select count(id) from subject where panel_id=' . PANEL;
+	$subjects_count = 0;
+	if ($res_count = mysqli_query($db_link_count, $sql_count)){
+		if ($datarow = mysqli_fetch_array($res_count)){
+			$subjects_count = $datarow[0];
+		}
+		mysqli_free_result($res_count);
+		mysqli_close($db_link_count);
+	}else{
+		mysqli_close($db_link_count);
+		//some code...
+		exit;
+	}
+	
+	$page = 1;
+	$count = 25;
+	$has_next_page = true;
+	if (isset($_GET['page'])){
+		$page = intval($_GET['page']);
+	}
+	if (isset($_GET['count'])){
+		$count = intval($_GET['count']);
+	}
+	if ($page * $count >= $subjects_count){
+		$has_next_page = false;
+	}
+	
+	if (!$db_link = get_connection()){
+		//some code...
+		exit;
+	}
+	$sql = 'select subject_id from subject_score where panel_id=' . PANEL . ' order by score desc,subject_id desc limit ' . ($count * ($page - 1)) . ',' . $count;
 	$subject_ids_arr = array();
 	if ($res = mysqli_query($db_link, $sql)){
 		while ($datarow = mysqli_fetch_array($res)){
@@ -21,7 +127,6 @@
 	}else{
 		mysqli_close($db_link);
 		//some code...
-		echo -2;
 		exit;
 	}
 	
@@ -77,9 +182,9 @@
 					echo -2;
 					exit;
 				}
-				$up = $datarow['up'];
-				$down = $datarow['down'];
-				$subject['score'] = intval($up) - intval($down);
+				$up = $datarow_subject['up'];
+				$down = $datarow_subject['down'];
+				$subject['voted'] = intval($up) - intval($down);
 				$sub_time = $datarow_subject['sub_time'];
 				$time_diff = time() - intval($sub_time);
 				if ($time_diff < 60){
@@ -91,6 +196,39 @@
 				}elseif ($time_diff >= (24 * 60 * 60)){
 					$subject['time'] = floor($time_diff / (60 * 60 * 24)) . '天';
 				}
+				if (!$db_link_comment = get_connection()){
+					//some code...
+					exit;
+				}
+				$sql_comment = 'select count(id) from comment where subject_id=' . $subject['id'];
+				if ($res_comment = mysqli_query($db_link_comment, $sql_comment)){
+					if ($datarow_comment = mysqli_fetch_array($res_comment)){
+						$subject['comments_count'] = $datarow_comment[0];
+					}
+					mysqli_free_result($res_comment);
+					mysqli_close($db_link_comment);
+				}else{
+					//some code...
+					mysqli_close($db_link_comment);
+				}
+				if (isset($_SESSION['user'])){
+					if (!$db_link_subject_vote = get_connection()){
+						//some code...
+						exit;
+					}
+					$sql_subject_vote = 'select vote from subject_vote where subject_id=' . $subject['id'] . ' and user_id=' . $_SESSION['user'];
+					if ($res_subject_vote = mysqli_query($db_link_subject_vote, $sql_subject_vote)){
+						if ($datarow_subject_vote = mysqli_fetch_array($res_subject_vote)){
+							$subject['vote'] = $datarow_subject_vote['vote'];
+						}
+						mysqli_free_result($res_subject_vote);
+						mysqli_close($db_link_subject_vote);
+					}else{
+						mysqli_close($db_link_subject_vote);
+						//some code...
+						exit;
+					}
+				}
 				$subjects_arr[] = $subject;
 			}
 			mysqli_free_result($res_subject);
@@ -100,259 +238,193 @@
 		}
 	}
 ?>
-<!DOCTYPE html>
+<!DOCTYPE>
 <html lang="zh-CN">
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 		<meta charset="UTF-8">
-		<link rel="stylesheet" href="css/includes/global.css">
-		<link rel="stylesheet" href="css/includes/header.css">
-		<link rel="stylesheet" href="css/includes/marquee.css">
-		<link rel="stylesheet" href="css/index.css">
-		<link rel="stylesheet" href="css/login.css">
-		<script src="js/tool/TranspMarquee/TranspMarquee.js"></script>
+		<link rel="stylesheet" href="../../css/includes/global.css">
+		<link rel="stylesheet" href="../../css/includes/header.css">
+		<link rel="stylesheet" href="../../css/includes/side.css">
+		<link rel="stylesheet" href="../../css/index.css">
 	</head>
 	<body>
 		<div id="header">
-			<div id="c-header-copy"></div>
+			<div id="header-top-area">
+				<div>
+					<a href="../../">首页</a>
+					<span>-</span>
+					<a href="../all/">所有</a>
+					<span>-</span>
+					<a href="../random/">随机</a>
+				</div>
+				<span>|</span>
+				<div>
+					<?php
+						foreach ($panels_arr as $k=>$p){
+							if ($k > 0){
+					?>
+					<span>-</span>
+					<?php
+							}
+							if ($p['name'] == PANEL_NAME){
+					?>
+					<a class="top-area-panel-selected" href="../<?=$p['name']?>/"><?=$p['display_name']?></a>
+					<?php
+							}else{
+					?>
+					<a href="../<?=$p['name']?>/"><?=$p['display_name']?></a>
+					<?php
+							}
+						}
+					?>
+				</div>
+			</div>
 			<div id="c-header">
 				<div id="title">
-					<span>THE FRONT PAGE <span id="of">OF</span></span>
-					<img src="img/header/eve-online.png" alt="EVE-Online">
-				</div>
-				<div id="menu-copy">
-					<ul>
-						<li><a>热门</a></li>
-						<li><a>最新</a></li>
-						<li><a>好评上升中</a></li>
-						<li><a>具争议的</a></li>
-						<li><a>头等</a></li>
-						<li><a>精选</a></li>
-						<li><a>wiki</a></li>
-					</ul>
+					<a id="site-title" href="<?=HOST?>">
+						Sailing<!--img-->
+					</a><span
+					id="panel-name">
+						<a href="<?=HOST?>/s/<?=strtolower(PANEL_NAME)?>"><?=PANEL_DISPLAY?></a>
+					</span>
 				</div>
 				<div id="menu">
 					<ul>
-						<li><a href="" class="high-lighter">热门</a></li>
+						<li class="menu-active"><a href="./">热门</a></li>
 						<li><a href="new/">最新</a></li>
-						<li><a href="">好评上升中</a></li>
-						<li><a href="">具争议的</a></li>
-						<li><a href="">头等</a></li>
-						<li><a href="">精选</a></li>
-						<li><a href="">wiki</a></li>
+						<li><a href="rising/">好评上升中</a></li>
+						<li><a href="controversial/">具争议的</a></li>
+						<li><a href="top/">头等</a></li>
+						<li><a href="gilded/">精选</a></li>
+						<li><a href="wiki/index/">wiki</a></li>
 					</ul>
 				</div>
-				
 				<?php
-					if (!isset($_SESSION['user']) && !isset($_SESSION['id'])){
+					if (!isset($_SESSION['user'])){
 				?>
-				
-				<div id="headersign-copy">
-					<span>想要加入？<a href="" class="btn signin">&nbsp;登入或注册账号&nbsp;</a>不用几秒钟</span>
+				<div id="header-sign-in">
+					<span>想要加入？<a href="<?=HOST?>/login/">&nbsp;注册或登录帐号&nbsp;</a>不用几秒钟</span>
 				</div>
-				<div id="headersign">
-					<span>想要加入？<a href="" onclick="return showSigninFrame();" class="btn signin">&nbsp;登入或注册账号&nbsp;</a>不用几秒钟</span>
-				</div>
-				
 				<?php
 					}else{
 				?>
-				
-				<div id="headersignedin-copy">
-					<span>
-						<a class="high-lighter"><?=$_SESSION['user']?></a>(<a
-						 class="high-lighter"><??></a>)
-						 |
-						 <a class="high-lighter">登出</a>
-					</span>
+				<div id="header-signed-in">
+					<span><?=$username?><span id="split">|</span><a href="../../script/logout/logout.php">登出</a></span>
 				</div>
-				<div id="headersignedin">
-					
-					<span>
-						<a href="" class="high-lighter"><?=$_SESSION['user']?></a>(<a
-						 href="" class="high-lighter"><??></a>)
-						 |
-						<form id="logout" action="http://localhost/good-eve/pg/post/logout/" method="post">
-							<a href="javascript:void(0);" onclick="document.getElementById('logout').submit();" class="high-lighter">登出</a>
-						</form>
-					</span>
-				</div>
-				
 				<?php
 					}
 				?>
-				
-			</div>
-			<div class="border-bot op"></div>
-			<div id="marquee-bar">
-				<div id="this-is-my-marquee"></div>
 			</div>
 		</div>
-		
-		<!-- signin frame -->
-		<div id="hidden-panel-copy_login"></div>
-		<div id="panel-container">
-			<div id="hidden-panel_login">
-				<div class="split-panel">
-					<div class="split-panel-section split-panel-divider">
-						<div class="contain_reg">
-							<h4 class="modal-title">建立一个新账号</h4>
-							<form id="register-form" method="post" action="http://localhost/good-eve/pg/post/reg/" class="form-v2" onsubmit="return checkReg();">
-								<div class="c-form-group">
-									<label for="user_reg" class="screenreader-only">用户名：</label>
-									<input value name="user" id="user_reg" class="c-form-control" type="text" maxlength="20" placeholder="选择一个用户名">
-									
-									<div class="check c-user prompt" id="c-user-exists">
-										<span class="tri"></span>
-										<span class="prompt userexists">这个用户名已经被注册了</span>
-									</div>
-									<div class="check c-user prompt" id="c-user-length">
-										<span class="tri"></span>
-										<span class="prompt userlength">用户名必须介于3~20个字</span>
-									</div>
-									
-								</div>
-								<div class="c-form-group">
-									<label for="passwd_reg" class="screenreader-only">密码：</label>
-									<input id="passwd_reg" name="passwd" class="c-form-control" type="password" placeholder="密码">
-									
-									<div class="check c-passwd prompt" id="c-passwd">
-										<span class="tri"></span>
-										<span class="prompt passwdlength">密码长度至少要6位</span>
-									</div>
-									
-								</div>
-								<div class="c-form-group">
-									<label for="passwd2_reg" class="screenreader-only">确认密码：</label>
-									<input name="passwd2" id="passwd2_reg" class="c-form-control" type="password" placeholder="确认密码">
-									
-									<div class="check c-passwd2 prompt" id="c-passwd2">
-										<span class="tri"></span>
-										<span class="prompt passwd2wrong">密码不符</span>
-									</div>
-									
-								</div>
-								<div class="c-form-group">
-									<label for="email_reg" class="screenreader-only"></label>
-									<input value name="email" id="email_reg" class="c-form-control" type="text" placeholder="email（可选）">
-									
-									<div class="check c-email prompt" id="c-email">
-										<span class="tri"></span>
-										<span class="prompt emailwrong">此电子邮箱是无效的</span>
-									</div>
-									
-								</div>
-								<div class="c-checkbox">
-									<div class="c-rem">
-										<input type="checkbox" name="rem" id="rem_reg">
-										<label for="rem_reg">记住我</label>
-									</div>
-								</div>
-								<div class="c-clearfix c-submit-group">
-									<span class="c-form-throbber"></span>
-									<button type="submit" class="c-btn c-btn-primary c-pull-right">建立账号</button>
-								</div>
-							</form>
-						</div>
-					</div>
-					<div class="split-panel-section">
-						<div class="contain_signin">
-							<h4 class="modal-title">登入</h4>
-							<form id="login-form" method="post" action="http://localhost/good-eve/pg/post/login/" onsubmit="return checkPwd();" class="form-v2">
-								<div class="c-form-group">
-									<label for="user_login" class="screenreader-only">用户名：</label>
-									<input name="user" id="user-panel_login" class="c-form-control" type="text" maxlength="20" placeholder="用户名" autofocus>
-								</div>
-								<div class="c-form-group">
-									<label for="passwd_login" class="screenreader-only">密码：</label>
-									<input id="passwd-panel_login" class="c-form-control" name="passwd" type="password" placeholder="密码">
-									
-									
-									<div class="check c-pwd prompt" id="c-pwd">
-										<span class="tri"></span>
-										<span class="prompt pwdwrong">密码错误</span>
-									</div>
-									
-								</div>
-								<div class="c-checkbox">
-									<div class="c-rem">
-										<input type="checkbox" name="rem" id="rem_login">
-										<label for="rem_login">记住我</label>
-									</div>
-									<a href="/password" class="c-pull-right">重设密码</a>
-								</div>
-								<div class="c-clearfix c-submit-group">
-									<span class="c-form-throbber"></span>
-									<button type="submit" class="c-btn c-btnprimary c-pull-right" id="submit-user-panel">登入</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- end of signin frame -->
 		<div id="content">
 			<div id="c-content">
-			
-				<div id="sidebar">
+				<div id="side">
 					<div class="spacer">
-						<input type="text" placeholder="search" id="search">
-						<img class="btn search" src="../img/sidebar/search-magnifier2.png">
+						<input type="text" placeholder="搜索" id="search">
 					</div>
-					
 					<?php
-						if (!(isset($_SESSION['id']) && isset($_SESSION['user']))){
+						if (!isset($_SESSION['user'])){
 					?>
-					
-					<div class="spacer" id="login-area">
-						<form method="post" action="http://localhost/good-eve/pg/post/login/" onsubmit="return checkSidebarPasswd();" id="login_login-main" class="login-form login-form-side">
-							<input name="user" type="text" id="user" placeholder="用户名" maxlength="20">
-							<input name="passwd" type="password" id="passwd" placeholder="密码">
-							<div id="login-main">
-								<div id="remember-me">
-									<input type="checkbox" name="rem" id="rem-login-main">
-									<label for="rem-login-main" id="rem-prompt">记住我</label>
-									<a id="recover-password" href="">重设密码</a>
+					<div class="spacer" id="side-sign-in">
+						<form id="side-login" method="post" action="javascript:void(0);" onsubmit="return false;">
+							<input name="username" type="text" placeholder="用户名" maxlength="20"><input
+							name="passwd" type="password" placeholder="密码">
+							<div>
+								<div id="remember-and-recover">
+									<input id="remember" type="checkbox" name="remember">
+									<label for="remember">记住我</label>
+									<a id="recover" href="">重设密码</a>
 								</div>
-								<div class="submit" id="login-subbutton">
-									<button class="btn" type="submit" id="submit-user">登入</button>
+								<div>
+									<input type="submit" value="登入" onclick="sideLogin('../../');">
 								</div>
-								<div class="clear"></div>
 							</div>
 						</form>
 					</div>
-					
 					<?php
 						}
 					?>
-					
-					<div class="spacer c-button">
-						<a class="btn large-btn" id="new-sub-btn">发表新文章</a>
+					<div class="spacer">
+						<a class="new-btn" id="new-link" href="submit/?type=link">发表新链接</a>
 					</div>
-					<div class="spacer c-button">
-						<a class="btn large-btn" id="new-panel-btn">建立新看板</a>
+					<div class="spacer">
+						<a class="new-btn" id="new-sub" href="submit/">发表新文章</a>
+					</div>
+					<div class="spacer">
+						<a class="new-btn" id="new-panel">建立新看板</a>
 					</div>
 				</div>
-				
-				
 				<div id="subjects">
 					<?php
-						foreach ($subjects_arr as $i=>$subject){
+						foreach($subjects_arr as $i=>$subject){
 					?>
-					<div class="spacer" onmouseover="this.style.backgroundColor='#2b2b2b';" onmouseout="this.style.backgroundColor='#323232';">
-						<div class="background-img top"></div>
+					<div class="spacer">
 						<span class="num"><?=++$i?></span>
 						<div class="unvoted">
-							<div class="arrow up" id="upvote"></div>
-							<div class="score" id="dislikes"><?=$subject['score'] - 1?></div>
-							<div class="score active" id="unvoted"><?=$subject['score']?></div>
-							<div class="score" id="likes"><?=$subject['score'] + 1?></div>
-							<div class="arrow down" id="downvote"></div>
+							<?php
+								if (isset($subject['vote']) && $subject['vote'] == 1){
+							?>
+							<div class="arrow up upvoted" id="up-subject<?=$subject['id']?>"
+								onclick="cancelUpSubject(<?=(isset($_SESSION['user']) ? $_SESSION['user'] : 0)?>, <?=$subject['id']?>);"></div>
+							<?php
+								}else{
+							?>
+							<div class="arrow up" id="up-subject<?=$subject['id']?>"
+								onclick="upSubject(<?=(isset($_SESSION['user']) ? $_SESSION['user'] : 0)?>, <?=$subject['id']?>);"></div>
+							<?php
+								}
+							?>
+							
+							<?php
+								if (isset($subject['vote']) && $subject['vote'] == -1){
+							?>
+							<div class="score active" id="dislikes<?=$subject['id']?>"><?=$subject['voted']?></div>
+							<div class="score" id="unvoted<?=$subject['id']?>"><?=$subject['voted'] + 1?></div>
+							<div class="score" id="likes<?=$subject['id']?>"><?=$subject['voted'] + 2?></div>
+							<?php
+								}elseif (isset($subject['vote']) && $subject['vote'] == 1){
+							?>
+							<div class="score" id="dislikes<?=$subject['id']?>"><?=$subject['voted'] - 2?></div>
+							<div class="score" id="unvoted<?=$subject['id']?>"><?=$subject['voted'] - 1?></div>
+							<div class="score active" id="likes<?=$subject['id']?>"><?=$subject['voted']?></div>
+							<?php
+								}else{
+							?>
+							<div class="score" id="dislikes<?=$subject['id']?>"><?=$subject['voted'] - 1?></div>
+							<div class="score active" id="unvoted<?=$subject['id']?>"><?=$subject['voted']?></div>
+							<div class="score" id="likes<?=$subject['id']?>"><?=$subject['voted'] + 1?></div>
+							<?php
+								}
+							?>
+							
+							<?php
+								if (isset($subject['vote']) && $subject['vote'] == -1){
+							?>
+							<div class="arrow down downvoted" id="down-subject<?=$subject['id']?>"
+								onclick="cancelDownSubject(<?=(isset($_SESSION['user']) ? $_SESSION['user'] : 0)?>, <?=$subject['id']?>);"></div>
+							<?php
+								}else{
+							?>
+							<div class="arrow down" id="down-subject<?=$subject['id']?>"
+								onclick="downSubject(<?=(isset($_SESSION['user']) ? $_SESSION['user'] : 0)?>, <?=$subject['id']?>);"></div>
+							<?php
+								}
+							?>
 						</div>
 						<div class="entry">
-							<p class="title">
-								<a href="comments/subject?subject=<?=$subject['id']?>" class="title">
+							<p class="c-title">
+								<?php
+									if ($subject['link'] == ''){
+								?>
+								<a class="title" href="<?=HOST?>/s/<?=$subject['panel']?>/comments/subject?subject=<?=$subject['id']?>">
+								<?php
+									}else{
+								?>
+								<a class="title" href="http://<?=$subject['link']?>">
+								<?php
+									}
+								?>
 								<?=$subject['title']?>
 								</a>
 								<span class="domain">
@@ -362,12 +434,12 @@
 							<p class="tagline">
 								<time><?=$subject['time']?></time>
 								前被
-								<a class="author may-blank"><?=$subject['username']?></a>
+								<a class="author"><?=$subject['username']?></a>
 								提交到
-								<a class="subsailing may-blank">/s/<?=$subject['panel']?></a>
+								<a class="subto" href="<?=HOST?>/s/<?=strtolower($subject['panel'])?>">/s/<?=$subject['panel']?></a>
 							</p>
-							<p class="subtagline btn">
-								<a class="comments may-blank">221留言</a>
+							<p class="subtagline">
+								<a class="comments" href="<?=HOST?>/s/<?=strtolower($subject['panel'])?>/comments/subject?subject=<?=$subject['id']?>"><?=($subject['comments_count'] == 0 ? '' : $subject['comments_count'])?>留言</a>
 							</p>
 						</div>
 					</div>
@@ -375,12 +447,38 @@
 						}
 					?>
 				</div>
-				
+				<?php
+					if ($has_next_page || $page > 1){
+				?>
+				<div class="nav-btns">
+					<div class="next-page">
+						<span>继续阅读：</span>
+						<?php
+							if ($page > 1){
+						?>
+						<a href="./?page=<?=$page - 1?>&count=<?=$count?>">‹ 上一页</a>
+						<?php
+							}
+							if ($page > 1 && $has_next_page){
+						?>
+						<span class="division"></span> 
+						<?php
+							}
+							if ($has_next_page){
+						?>
+						&nbsp;<a href="./?page=<?=$page + 1?>&count=<?=$count?>">下一页 ›</a>
+						<?php
+							}
+						?>
+					</div>
+				</div>
+				<?php
+					}
+				?>
 			</div>
 		</div>
-		
-		<script>
-			initMarquee("this-is-my-marquee", "today_goods_price.json");
-		</script>
+		<script src="../../s_includes/js/xmlhttp.js"></script>
+		<script src="../../s_includes/js/panel.js"></script>
+		<script src="../../s_includes/js/sideLogin.js"></script>
 	</body>
 </html>

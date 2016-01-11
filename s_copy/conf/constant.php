@@ -1,4 +1,5 @@
 <?php
-	define('PANEL', 1);
-	define('PANEL_NAME', 'Music');
+	define('PANEL', %id%);
+	define('PANEL_NAME', '%name%');
+	define('PANEL_DISPLAY', '%display%');
 ?>

@@ -478,7 +478,7 @@
 			</div>
 		</div>
 		<script src="../../../s_includes/js/xmlhttp.js"></script>
-		<script src="../../../s_includes/js/subPanel.js"></script>
+		<script src="../../../s_includes/js/panel.js"></script>
 		<script src="../../../s_includes/js/sideLogin.js"></script>
 	</body>
 </html>

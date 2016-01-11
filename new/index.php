@@ -296,7 +296,7 @@
 					if (!isset($_SESSION['user'])){
 				?>
 				<div id="header-sign-in">
-					<span>想要加入？<a href="">&nbsp;注册或登录帐号&nbsp;</a>不用几秒钟</span>
+					<span>想要加入？<a href="<?=HOST?>/login/">&nbsp;注册或登录帐号&nbsp;</a>不用几秒钟</span>
 				</div>
 				<?php
 					}else{
@@ -440,12 +440,28 @@
 					?>
 				</div>
 				<?php
-					if ($has_next_page){
+					if ($has_next_page || $page > 1){
 				?>
 				<div class="nav-btns">
 					<div class="next-page">
-						继续阅读：
-						<a href="./?page=<?=$page + 1?>&count=<?=$count?>">下一页 ›</a>
+						<span>继续阅读：</span>
+						<?php
+							if ($page > 1){
+						?>
+						<a href="./?page=<?=$page - 1?>&count=<?=$count?>">‹ 上一页</a>
+						<?php
+							}
+							if ($page > 1 && $has_next_page){
+						?>
+						<span class="division"></span> 
+						<?php
+							}
+							if ($has_next_page){
+						?>
+						&nbsp;<a href="./?page=<?=$page + 1?>&count=<?=$count?>">下一页 ›</a>
+						<?php
+							}
+						?>
 					</div>
 				</div>
 				<?php
@@ -455,6 +471,6 @@
 		</div>
 		<script src="../js/xmlhttp.js"></script>
 		<script src="../js/sideLogin.js"></script>
-		<script src="../js/sailing.js"></script>
+		<script src="../js/subSailing.js"></script>
 	</body>
 </html>

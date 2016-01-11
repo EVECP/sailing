@@ -299,7 +299,7 @@
 					if (!isset($_SESSION['user'])){
 				?>
 				<div id="header-sign-in">
-					<span>想要加入？<a href="">&nbsp;注册或登录帐号&nbsp;</a>不用几秒钟</span>
+					<span>想要加入？<a href="<?=HOST?>/login/">&nbsp;注册或登录帐号&nbsp;</a>不用几秒钟</span>
 				</div>
 				<?php
 					}else{
@@ -441,46 +441,30 @@
 					<?php
 						}
 					?>
-					<!--
-					<div class="spacer">
-						<span class="num">2</span>
-						<div class="unvoted">
-							<div class="arrow up" id="upvote"></div>
-							<div class="score" id="dislikes">21</div>
-							<div class="score active" id="unvoted">22</div>
-							<div class="score" id="likes">23</div>
-							<div class="arrow down" id="downvote"></div>
-						</div>
-						<div class="entry">
-							<p class="c-title">
-								<a class="title" href="comments?subject=<??>">
-								One of the best series of random events ever caught on film.
-								TIL that a father was denied access to see his premature twins in the NICU when Beyonce and Jay-Z had their daughter at the same time.
-								</a>
-								<span class="domain">
-									<a>(sailing.com)</a>
-								</span>
-							</p>
-							<p class="tagline">
-								<time>2小时</time>
-								前被
-								<a class="author">liyz</a>
-								提交到
-								<a class="subto">/s/music</a>
-							</p>
-							<p class="subtagline">
-								<a class="comments">221留言</a>
-							</p>
-						</div>
-					</div>-->
 				</div>
 				<?php
-					if ($has_next_page){
+					if ($has_next_page || $page > 1){
 				?>
 				<div class="nav-btns">
 					<div class="next-page">
-						继续阅读：
-						<a href="./?page=<?=$page + 1?>&count=<?=$count?>">下一页 ›</a>
+						<span>继续阅读：</span>
+						<?php
+							if ($page > 1){
+						?>
+						<a href="./?page=<?=$page - 1?>&count=<?=$count?>">‹ 上一页</a>
+						<?php
+							}
+							if ($page > 1 && $has_next_page){
+						?>
+						<span class="division"></span> 
+						<?php
+							}
+							if ($has_next_page){
+						?>
+						&nbsp;<a href="./?page=<?=$page + 1?>&count=<?=$count?>">下一页 ›</a>
+						<?php
+							}
+						?>
 					</div>
 				</div>
 				<?php
@@ -488,8 +472,8 @@
 				?>
 			</div>
 		</div>
-		<script src="../../js/xmlhttp.js"></script>
+		<script src="../../s_includes/js/xmlhttp.js"></script>
 		<script src="../../s_includes/js/sideLogin.js"></script>
-		<script src="../../js/sailing.js"></script>
+		<script src="../../s_includes/js/panel.js"></script>
 	</body>
 </html>

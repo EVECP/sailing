@@ -304,7 +304,7 @@
 					if (!isset($_SESSION['user'])){
 				?>
 				<div id="header-sign-in">
-					<span>想要加入？<a href="">&nbsp;注册或登录帐号&nbsp;</a>不用几秒钟</span>
+					<span>想要加入？<a href="<?=HOST?>/login/">&nbsp;注册或登录帐号&nbsp;</a>不用几秒钟</span>
 				</div>
 				<?php
 					}else{

@@ -1,30 +1,33 @@
 <?php
 	require_once('../conf/constant.php');
 	require_once('../../../conf/db_link.php');
+	require_once('../../../conf/constant.php');
 	if (!isset($_SESSION)){
 		session_start();
 	}
-	if (!isset($_SESSION['user'])){
-		//header('Location: ../login');
-	}
-	/*
-	if (!$db_link = get_connection()){
-		//some code...
-		exit;
-	}
-	$sql_panel = 'select name from panel where id=' . PANEL;
-	$panel_name = '';
-	if ($res_panel = mysqli_query($db_link, $sql_panel)){
-		if ($datarow_panel = mysqli_fetch_array($res_panel)){
-			$panel_name = $datarow_panel['name'];
+	if (isset($_SESSION['user'])){
+		if (!$db_link_user = get_connection()){
+			//some code...
+			exit;
 		}
-		mysqli_free_result($res_panel);
-		mysqli_close($db_link);
-	}else{
-		mysqli_close($db_link);
-		//some code...
-		exit;
-	}*/
+		$sql_user = 'select username from user where id=' . $_SESSION['user'];
+		$username = '';
+		if ($res_user = mysqli_query($db_link_user, $sql_user)){
+			if ($datarow_user = mysqli_fetch_array($res_user)){
+				$username = $datarow_user['username'];
+			}
+			mysqli_free_result($res_user);
+			mysqli_close($db_link_user);
+		}else{
+			//some code...
+			mysqli_close($db_link_user);
+			exit;
+		}
+	}
+	$has_login = 'true';
+	if (!isset($_SESSION['user'])){
+		$has_login = 'false';
+	}
 ?>
 <!DOCTYPE>
 <html lang="zh-CN">
@@ -40,26 +43,13 @@
 		<div id="header">
 			<div id="c-header">
 				<div id="title">
-					<a id="site-title" href="./">
+					<a id="site-title" href="<?=HOST?>">
 						Sailing<!--img-->
 					</a><span
-					id="panel-name">
-						<a><?=PANEL_NAME?><a>
-					</span>
-				</div>
-				<div id="menu">
-					<ul>
-						<li class="menu-active"><a href="./">热门</a></li>
-						<li><a href="new/">最新</a></li>
-						<li><a href="rising/">好评上升中</a></li>
-						<li><a href="controversial/">具争议的</a></li>
-						<li><a href="top/">头等</a></li>
-						<li><a href="gilded/">精选</a></li>
-						<li><a href="wiki/index/">wiki</a></li>
-					</ul>
+					id="send"><a href="<?=HOST?>/s/<?=strtolower(PANEL_NAME)?>"><?=PANEL_DISPLAY?></a>：送出</span>
 				</div>
 				<div id="header-signed-in">
-					<!--some code-->
+					<span><?=$username?><span id="split">|</span><a href="<?=HOST?>/script/logout/logout.php">登出</a></span>
 				</div>
 			</div>
 		</div>
@@ -71,12 +61,24 @@
 					</div>
 				</div>
 				<div id="c-new">
-					<h1>发表至 <?=PANEL_NAME?></h1>
+					<h1>发表至 <?=PANEL_DISPLAY?></h1>
 					<form id="form-new" method="get" name="new" action="javascript:void(0);" onsubmit="sub();">
 						<ul id="tab-menu">
+							<?php
+								if (isset($_GET['type']) && $_GET['type'] == 'link'){
+							?>
+							<li id="new-link" class="tab-active">链接</li><li
+							id="new-text">文本</li>
+							<input id="menu-type" type="hidden" name="menu_type" value="link">
+							<?php
+								}else{
+							?>
 							<li id="new-link">链接</li><li
 							class="tab-active" id="new-text">文本</li>
 							<input id="menu-type" type="hidden" name="menu_type" value="text">
+							<?php
+								}
+							?>
 						</ul>
 						<div class="spacer">
 							<div class="field">
@@ -86,7 +88,10 @@
 								</div>
 							</div>
 						</div>
-						<div class="spacer" id="spacer-text">
+						<?php
+							if (isset($_GET['type']) && $_GET['type'] == 'link'){
+						?>
+						<div class="spacer hidden" id="spacer-text">
 							<div class="field">
 								<span class="title">文字</span>
 								<span class="little white">（非必填项目）</span>
@@ -103,12 +108,36 @@
 								</div>
 							</div>
 						</div>
+						<?php
+							}
+							if (!isset($_GET['type']) || (isset($_GET['type']) && $_GET['type'] == 'text')){
+						?>
+						<div class="spacer" id="spacer-text">
+							<div class="field">
+								<span class="title">文字</span>
+								<span class="little white">（非必填项目）</span>
+								<div class="field-c">
+									<textarea rows="5" cols="1" name="text"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="spacer hidden" id="spacer-link">
+							<div class="field">
+								<span class="title">网址</span>
+								<div class="field-c">
+									<input type="text" name="link">
+								</div>
+							</div>
+						</div>
+						<?php
+							}
+						?>
 						<div class="spacer">
 							<div class="field">
 								<span class="title">选择看板</span>
 								<div class="field-c">
 									<input id="panel-id" type="hidden" name="panel_id" value="<?=PANEL?>">
-									<input id="panel-name2" type="text" value="<?=PANEL_NAME?>">
+									<input id="panel-name2" type="text" value="<?=PANEL_DISPLAY?>">
 									<div id="c-panels">
 										<span>你已订阅的看板</span>
 										<div id="panels"></div>
@@ -130,10 +159,14 @@
 				</div>
 			</div>
 		</div>
+		<script src="../../../s_includes/js/xmlhttp.js"></script>
 		<script src="../../../s_includes/js/submit.js"></script>
 		<script>
 			window.onload = function(){
-				getPanelArr(<?=1?>);
+				if (!<?=$has_login?>){
+					window.location.href = '../../../login';
+				}
+				getPanelArr(<?=$_SESSION['user']?>);
 			}
 		</script>
 	</body>

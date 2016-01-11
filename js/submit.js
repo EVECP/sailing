@@ -58,7 +58,7 @@ function getPanelNameById(id){
 function sub(){
 	var form = document.getElementById("form-new");
 	var sendreplies = 0;
-	if (document.getElementById("panel-id").checked = "checked"){
+	if (document.getElementById("sendreplies").checked == true){
 		sendreplies = 1;
 	}
 	var xmlhttp = getXmlhttp();

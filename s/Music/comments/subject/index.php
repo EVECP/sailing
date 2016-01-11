@@ -264,13 +264,13 @@
 					if (!isset($_SESSION['user'])){
 				?>
 				<div id="header-sign-in">
-					<span>想要加入？<a href="">&nbsp;注册或登录帐号&nbsp;</a>不用几秒钟</span>
+					<span>想要加入？<a href="<?=HOST?>/login/">&nbsp;注册或登录帐号&nbsp;</a>不用几秒钟</span>
 				</div>
 				<?php
 					}else{
 				?>
 				<div id="header-signed-in">
-					<span><?=$username?><span id="split">|</span><a>登出</a></span>
+					<span><?=$username?><span id="split">|</span><a href="<?=HOST?>/script/logout/logout.php">登出</a></span>
 				</div>
 				<?php
 					}
@@ -297,7 +297,7 @@
 									<a id="recover" href="">重设密码</a>
 								</div>
 								<div>
-									<input type="submit" value="登入" onclick="sideLogin('../../../../script');">
+									<input type="submit" value="登入" onclick="sideLogin('../../../../');">
 								</div>
 							</div>
 						</form>
@@ -382,7 +382,7 @@
 								前被
 								<a class="author"><?=$subject['username']?></a>
 								提交到
-								<a class="subto">/s/<?=$subject['panel']?></a>
+								<a class="subto" href="<?=HOST?>/s/<?=strtolower($subject['panel'])?>">/s/<?=$subject['panel']?></a>
 							</p>
 							<div id="context">
 								<div id="c-context">

@@ -50,7 +50,7 @@
 								<label for="rem-reg">记住我</label>
 							</div>
 							<div class="submit-group">
-								<input class="sub-btn" type="submit" value="注册">
+								<input class="sub-btn" type="submit" value="注册" onclick="register('<?=$url_referer?>');">
 							</div>
 						</form>
 					</div>
