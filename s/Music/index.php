@@ -310,7 +310,7 @@
 					}else{
 				?>
 				<div id="header-signed-in">
-					<span><?=$username?><span id="split">|</span><a>登出</a></span>
+					<span><?=$username?><span id="split">|</span><a href="../../script/logout/logout.php">登出</a></span>
 				</div>
 				<?php
 					}
@@ -337,7 +337,7 @@
 									<a id="recover" href="">重设密码</a>
 								</div>
 								<div>
-									<input type="submit" value="登入" onclick="sideLogin('../../script');">
+									<input type="submit" value="登入" onclick="sideLogin('../../');">
 								</div>
 							</div>
 						</form>
@@ -421,7 +421,7 @@
 								<?php
 									}else{
 								?>
-								<a class="title" href="<?=$subject['link']?>">
+								<a class="title" href="http://<?=$subject['link']?>">
 								<?php
 									}
 								?>

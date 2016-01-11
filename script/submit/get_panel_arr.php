@@ -20,12 +20,13 @@
 	}
 	$panels_arr = array();
 	foreach ($panel_ids_arr as $panel_id){
-		$sql_panel = 'select display_name from panel where id=' . $panel_id;
+		$sql_panel = 'select * from panel where id=' . $panel_id;
 		if ($res = mysqli_query($db_link, $sql_panel)){
 			if ($datarow = mysqli_fetch_array($res)){
 				$panel = array();
 				$panel['id'] = $panel_id;
 				$panel['display_name'] = $datarow['display_name'];
+				$panel['name'] = $datarow['name'];
 				$panels_arr[] = $panel;
 			}
 			mysqli_free_result($res);

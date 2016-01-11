@@ -49,7 +49,7 @@
 					id="send"><a href="<?=HOST?>/s/<?=strtolower(PANEL_NAME)?>"><?=PANEL_DISPLAY?></a>：送出</span>
 				</div>
 				<div id="header-signed-in">
-					<span><?=$username?><span id="split">|</span><a>登出</a></span>
+					<span><?=$username?><span id="split">|</span><a href="<?=HOST?>/script/logout/logout.php">登出</a></span>
 				</div>
 			</div>
 		</div>

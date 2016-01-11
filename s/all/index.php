@@ -4,6 +4,25 @@
 	if (!isset($_SESSION)){
 		session_start();
 	}
+	if (isset($_SESSION['user'])){
+		if (!$db_link_user = get_connection()){
+			//some code...
+			exit;
+		}
+		$sql_user = 'select username from user where id=' . $_SESSION['user'];
+		$username = '';
+		if ($res_user = mysqli_query($db_link_user, $sql_user)){
+			if ($datarow_user = mysqli_fetch_array($res_user)){
+				$username = $datarow_user['username'];
+			}
+			mysqli_free_result($res_user);
+			mysqli_close($db_link_user);
+		}else{
+			//some code...
+			mysqli_close($db_link_user);
+			exit;
+		}
+	}
 	
 	/**
 	 *select panel id order by subjects counts
@@ -286,7 +305,7 @@
 					}else{
 				?>
 				<div id="header-signed-in">
-					<!--some code-->
+					<span><?=$username?><span id="split">|</span><a href="../../script/logout/logout.php">登出</a></span>
 				</div>
 				<?php
 					}
@@ -313,7 +332,7 @@
 									<a id="recover" href="">重设密码</a>
 								</div>
 								<div>
-									<input type="submit" value="登入" onclick="sideLogin();">
+									<input type="submit" value="登入" onclick="sideLogin('../../');">
 								</div>
 							</div>
 						</form>
@@ -397,7 +416,7 @@
 								<?php
 									}else{
 								?>
-								<a class="title" href="<?=$subject['link']?>">
+								<a class="title" href="http://<?=$subject['link']?>">
 								<?php
 									}
 								?>
@@ -470,7 +489,7 @@
 			</div>
 		</div>
 		<script src="../../js/xmlhttp.js"></script>
-		<script src="../../js/sideLogin.js"></script>
+		<script src="../../s_includes/js/sideLogin.js"></script>
 		<script src="../../js/sailing.js"></script>
 	</body>
 </html>

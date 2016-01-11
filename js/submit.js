@@ -47,6 +47,14 @@ function selectPanel(id){
  *end
  */
  
+function getPanelNameById(id){
+	for (i in panelsArr){
+		if (panelsArr[i]["id"] == id){
+			return panelsArr[i]["name"];
+		}
+	}
+}
+ 
 function sub(){
 	var form = document.getElementById("form-new");
 	var sendreplies = 0;
@@ -62,5 +70,6 @@ function sub(){
 		+ "&panel_id=" + form.panel_id.value, false)
 	xmlhttp.send();
 	var result = xmlhttp.responseText;
-	alert(result);
+	var panelDisplayName = getPanelNameById(parseInt(form.panel_id.value));
+	window.location.href = "../s/" + panelDisplayName.toLowerCase() + "/comments/subject/?subject=" + result;
 }

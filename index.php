@@ -4,6 +4,26 @@
 	if (!isset($_SESSION)){
 		session_start();
 	}
+	if (isset($_SESSION['user'])){
+		if (!$db_link_user = get_connection()){
+			//some code...
+			exit;
+		}
+		$sql_user = 'select username from user where id=' . $_SESSION['user'];
+		$username = '';
+		if ($res_user = mysqli_query($db_link_user, $sql_user)){
+			if ($datarow_user = mysqli_fetch_array($res_user)){
+				$username = $datarow_user['username'];
+			}
+			mysqli_free_result($res_user);
+			mysqli_close($db_link_user);
+		}else{
+			//some code...
+			mysqli_close($db_link_user);
+			exit;
+		}
+	}
+	
 	
 	/**
 	 *select panel id order by subjects counts
@@ -277,13 +297,13 @@
 					if (!isset($_SESSION['user'])){
 				?>
 				<div id="header-sign-in">
-					<span>想要加入？<a href="">&nbsp;注册或登录帐号&nbsp;</a>不用几秒钟</span>
+					<span>想要加入？<a href="login/">&nbsp;注册或登录帐号&nbsp;</a>不用几秒钟</span>
 				</div>
 				<?php
 					}else{
 				?>
 				<div id="header-signed-in">
-					<!--some code-->
+					<span><?=$username?><span id="split">|</span><a href="script/logout/logout.php">登出</a></span>
 				</div>
 				<?php
 					}
@@ -394,7 +414,7 @@
 								<?php
 									}else{
 								?>
-								<a class="title" href="<?=$subject['link']?>">
+								<a class="title" href="http://<?=$subject['link']?>">
 								<?php
 									}
 								?>
@@ -419,38 +439,6 @@
 					<?php
 						}
 					?>
-					<!--
-					<div class="spacer">
-						<span class="num">2</span>
-						<div class="unvoted">
-							<div class="arrow up" id="upvote"></div>
-							<div class="score" id="dislikes">21</div>
-							<div class="score active" id="unvoted">22</div>
-							<div class="score" id="likes">23</div>
-							<div class="arrow down" id="downvote"></div>
-						</div>
-						<div class="entry">
-							<p class="c-title">
-								<a class="title" href="comments?subject=<??>">
-								One of the best series of random events ever caught on film.
-								TIL that a father was denied access to see his premature twins in the NICU when Beyonce and Jay-Z had their daughter at the same time.
-								</a>
-								<span class="domain">
-									<a>(sailing.com)</a>
-								</span>
-							</p>
-							<p class="tagline">
-								<time>2小时</time>
-								前被
-								<a class="author">liyz</a>
-								提交到
-								<a class="subto">/s/music</a>
-							</p>
-							<p class="subtagline">
-								<a class="comments">221留言</a>
-							</p>
-						</div>
-					</div>-->
 				</div>
 				<?php
 					if ($has_next_page || $page > 1){
