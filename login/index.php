@@ -8,7 +8,7 @@
 	}
 ?>
 <!DOCTYPE>
-<html>
+<html lang="zh-CN">
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 		<meta charset="UTF-8">
@@ -48,6 +48,9 @@
 							<div class="c-checkbox">
 								<input id="rem-reg" type="checkbox" name="rem">
 								<label for="rem-reg">记住我</label>
+							</div>
+							<div>
+								<span id="reg-prompt" style="line-height: 12px; color: #ff0000;"></span>
 							</div>
 							<div class="submit-group">
 								<input class="sub-btn" type="submit" value="注册" onclick="register('<?=$url_referer?>');">

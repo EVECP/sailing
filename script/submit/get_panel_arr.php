@@ -6,7 +6,7 @@
 		echo -1;
 		exit;
 	}
-	$sql_user = 'select panels from user where id=' . $user_id;
+	/*$sql_user = 'select panels from user where id=' . $user_id;
 	$panel_ids_arr = array();
 	if ($res = mysqli_query($db_link, $sql_user)){
 		if ($datarow = mysqli_fetch_array($res)){
@@ -34,6 +34,24 @@
 			echo -2;
 			exit;
 		}
+	}*/
+	/**
+	 *临时查找所有panel
+	 */
+	$panels_arr = array();
+	$sql_panel = 'select * from panel';
+	if ($res = mysqli_query($db_link, $sql_panel)){
+		while ($datarow = mysqli_fetch_array($res)){
+			$panel = array();
+			$panel['id'] = $panel_id;
+			$panel['display_name'] = $datarow['display_name'];
+			$panel['name'] = $datarow['name'];
+			$panels_arr[] = $panel;
+		}
+		mysqli_free_result($res);
+	}else{
+		echo -2;
+		exit;
 	}
 	echo json_encode($panels_arr);
 ?>
